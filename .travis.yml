@@ -1,7 +1,7 @@
-sudo: true
 language: java
-install: true 
-script: ./mvnw clean install
+mvn install -DskipTests=true -Dmaven.javadoc.skip=true
+mvn test
+
 
 
 cache:
