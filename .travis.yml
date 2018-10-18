@@ -1,7 +1,28 @@
 language: java
-mvn install -DskipTests=true -Dmaven.javadoc.skip=true
-mvn test
 
+jdk:
+  - oraclejdk8
+
+services:
+  - docker
+
+cache:
+  directories:
+    - "$HOME/.m2"
+
+before_install:
+  - openssl aes-256-cbc -K $encrypted_88b828c73747_key -iv $encrypted_88b828c73747_iv -in codesign.asc.enc -out codesign.asc -d
+  - gpg --batch --fast-import codesign.asc
+  - if [ -n "$TRAVIS_TAG" ]; then
+      mvn versions:set -DnewVersion=$TRAVIS_TAG;
+    fi
+
+install:
+  - mvn install -DskipTests=true -B -V -Psign -Dgpg.passphrase=$GPG_PASSPHRASE
+  - docker build -t $TRAVIS_REPO_SLUG .
+
+script:
+  - mvn test -B
 
 
 cache:
