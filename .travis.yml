@@ -8,9 +8,7 @@ services:
 
 
 
-install:
-  - mvn install -DskipTests=true -B -V -Psign -Dgpg.passphrase=$GPG_PASSPHRASE
-  - docker build -t $TRAVIS_REPO_SLUG .
+
 
 script:
   - mvn test -B
